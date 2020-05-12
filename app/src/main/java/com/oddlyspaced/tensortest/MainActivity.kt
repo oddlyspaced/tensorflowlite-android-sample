@@ -41,7 +41,15 @@ class MainActivity : AppCompatActivity() {
             val source = ImageDecoder.createSource(this.contentResolver, uri!!)
             val bmp = ImageDecoder.decodeBitmap(source)
             image.setImageBitmap(bmp)
-            output.text = classifier.recognizeImage(bmp.copy(Bitmap.Config.ARGB_8888, true), Surface.ROTATION_0)[0].toString()
+            val results = classifier.recognizeImage(bmp.copy(Bitmap.Config.ARGB_8888, true), Surface.ROTATION_0)
+            var highest = results[0].toString()
+            highest = highest.substring(highest.indexOf("(")+1, highest.indexOf("%"))
+            if (highest.toDouble() > 70.0 && results[0].toString().contains("covid"))  {
+                output.text = "Covid Positive"
+            }
+            else {
+                output.text = "Normal"
+            }
         }
     }
 
